@@ -86,7 +86,8 @@ void mover_jugadores(int respuesta, char tablero[][N], int pos_jugadores[][2], D
     switch(respuesta){
 
 	case KEY_RIGHT:
-	    if(tablero[pos_jugadores[0][0]][pos_jugadores[0][1]+2] != 'H'){
+	    if(tablero[pos_jugadores[0][0]][pos_jugadores[0][1]+2] != 'H' &&
+		    tablero[pos_jugadores[0][0]][pos_jugadores[0][1]+2] != CARACTERJ2){
 		tablero[pos_jugadores[0][0]][pos_jugadores[0][1]] = ' ';
 		pos_jugadores[0][1] ++;
 		apunta[0] = este;
@@ -94,7 +95,8 @@ void mover_jugadores(int respuesta, char tablero[][N], int pos_jugadores[][2], D
 	    break;
 
 	case DERECHA:
-	    if(tablero[pos_jugadores[1][0]][pos_jugadores[1][1]+2] != 'H'){
+	    if(tablero[pos_jugadores[1][0]][pos_jugadores[1][1]+2] != 'H' &&
+		    tablero[pos_jugadores[J2][0]][pos_jugadores[J2][1]+2] != CARACTERJ1){
 		tablero[pos_jugadores[1][0]][pos_jugadores[1][1]] = ' ';
 		pos_jugadores[1][1] ++;
 		apunta[1] = este;
@@ -102,7 +104,8 @@ void mover_jugadores(int respuesta, char tablero[][N], int pos_jugadores[][2], D
 	    break;
 
 	case KEY_LEFT:
-	    if(tablero[pos_jugadores[0][0]][pos_jugadores[0][1]-2] != 'H'){
+	    if(tablero[pos_jugadores[0][0]][pos_jugadores[0][1]-2] != 'H' &&
+		    tablero[pos_jugadores[0][0]][pos_jugadores[0][1]-2] != CARACTERJ2){
 		tablero[pos_jugadores[0][0]][pos_jugadores[0][1]] = ' ';
 		pos_jugadores[0][1] --;
 		apunta[0] = oeste;
@@ -110,7 +113,8 @@ void mover_jugadores(int respuesta, char tablero[][N], int pos_jugadores[][2], D
 	    break;
 
 	case IZQUIERDA:
-	    if(tablero[pos_jugadores[1][0]][pos_jugadores[1][1] - 2] != 'H'){
+	    if(tablero[pos_jugadores[1][0]][pos_jugadores[1][1] - 2] != 'H' &&
+		    tablero[pos_jugadores[J2][0]][pos_jugadores[J2][1]-2] != CARACTERJ1){
 		tablero[pos_jugadores[1][0]][pos_jugadores[1][1]] = ' ';
 		pos_jugadores[1][1] --;
 		apunta[1] = oeste;
@@ -118,8 +122,8 @@ void mover_jugadores(int respuesta, char tablero[][N], int pos_jugadores[][2], D
 	    break;
 
 	case KEY_UP:
-	    if(tablero[pos_jugadores[0][0] - 2][pos_jugadores[0][1]] != 'H'){
-
+	    if(tablero[pos_jugadores[0][0] - 2][pos_jugadores[0][1]] != 'H' &&
+		    tablero[pos_jugadores[0][0]-2][pos_jugadores[0][1]] != CARACTERJ2){
 		tablero[pos_jugadores[0][0]][pos_jugadores[0][1]] = ' '; 
 		pos_jugadores[0][0] --;
 		apunta[0] = norte;
@@ -127,7 +131,8 @@ void mover_jugadores(int respuesta, char tablero[][N], int pos_jugadores[][2], D
 	    break;
 
 	case ARRIBA:
-	    if(tablero[pos_jugadores[1][0] - 2][pos_jugadores[1][1]] != 'H'){
+	    if(tablero[pos_jugadores[1][0] - 2][pos_jugadores[1][1]] != 'H' &&
+		    tablero[pos_jugadores[J2][0]-2][pos_jugadores[J2][1]] != CARACTERJ1){
 		tablero[pos_jugadores[1][0]][pos_jugadores[1][1]] = ' ';
 		pos_jugadores[1][0] --;
 		apunta[1] = norte;
@@ -135,7 +140,8 @@ void mover_jugadores(int respuesta, char tablero[][N], int pos_jugadores[][2], D
 	    break;
 
 	case KEY_DOWN:
-	    if(tablero[pos_jugadores[0][0] + 2][pos_jugadores[0][1]] != 'H'){
+	    if(tablero[pos_jugadores[0][0] + 2][pos_jugadores[0][1]] != 'H' &&
+		    tablero[pos_jugadores[0][0]+2][pos_jugadores[J1][1]] != CARACTERJ2){
 		tablero[pos_jugadores[0][0]][pos_jugadores[0][1]] = ' ';
 		pos_jugadores[0][0] ++;
 		apunta[0] = sur;
@@ -143,7 +149,8 @@ void mover_jugadores(int respuesta, char tablero[][N], int pos_jugadores[][2], D
 	    break;
 
 	case ABAJO:
-	    if(tablero[pos_jugadores[1][0] + 2][pos_jugadores[1][1]] != 'H'){
+	    if(tablero[pos_jugadores[1][0] + 2][pos_jugadores[1][1]] != 'H' &&
+		    tablero[pos_jugadores[J2][0]+2][pos_jugadores[J2][1]] != CARACTERJ1){
 		tablero[pos_jugadores[1][0]][pos_jugadores[1][1]] = ' ';
 		pos_jugadores[1][0] ++;
 		apunta[1] = sur;
@@ -218,7 +225,8 @@ void mover_bala(arma bala[][MAXAMO], char tablero[][N], bool jugador_caido[], in
 			break;
 		}
 
-		if(tablero[bala[jugador][n_bala].fila][bala[jugador][n_bala].col] == 'H')
+		if(tablero[bala[jugador][n_bala].fila][bala[jugador][n_bala].col] == 'H' || 
+			tablero[bala[jugador][n_bala].fila][bala[jugador][n_bala].col] == ARMA)
 		    bala[jugador][n_bala].se_mueve = false;
 		else
 		    if(tablero[bala[jugador][n_bala].fila][bala[jugador][n_bala].col] == '0' ||
