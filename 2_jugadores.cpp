@@ -4,7 +4,7 @@
 #include <ncurses.h>
 #include <string.h>
 
-#define N 20
+#define N 20 //cantidad de celdas del mapa
 #define EXIT 27
 #define DERECHA 100 //la d
 #define IZQUIERDA 97 //la a
@@ -12,9 +12,20 @@
 #define ABAJO 115 //la s
 #define DISPARAR1 48 //numero 0
 #define DISPARAR2 32 //barra espaciadora
-#define MAXAMO 2
+#define MAXAMO 2 //municion maxima que se puede disparar
+#define J1 0 //se refiere al jugador 1
+#define J2 1
+#define NJUGADORES 2
+#define COORDENADAS 2
+#define FILA 0
+#define COLUMNA 1
+#define CARACTERJ1 '0'
+#define CARACTERJ2 '5'
+#define CMUNICION '*'
+#define ARMA '='
 
 enum Direccion{norte = 1, sur, este, oeste};
+enum Colores{VV = 1, AV, MV, NV, BV, RR};
 
 struct arma {
     Direccion direccion;
@@ -185,33 +196,34 @@ void mover_jugadores(int respuesta, char tablero[][N], int pos_jugadores[][2], D
 
 
 }
+//mueve a las balas
 void mover_bala(arma bala[][MAXAMO], char tablero[][N], bool jugador_caido[], int puntuacion[]){
 
-    for(int jugador=0; jugador<2; jugador++)
-	for(int asignar=0; asignar<MAXAMO; asignar++)
-	    if (bala[jugador][asignar].se_mueve){
-		tablero[bala[jugador][asignar].fila][bala[jugador][asignar].col] = ' ';
-		switch(bala[jugador][asignar].direccion){
+    for(int jugador=0; jugador<NJUGADORES; jugador++)
+	for(int n_bala=0; n_bala<MAXAMO; n_bala++)
+	    if (bala[jugador][n_bala].se_mueve){
+		tablero[bala[jugador][n_bala].fila][bala[jugador][n_bala].col] = ' ';
+		switch(bala[jugador][n_bala].direccion){
 		    case este:
-			bala[jugador][asignar].col++;
+			bala[jugador][n_bala].col++;
 			break;
 		    case oeste:
-			bala[jugador][asignar].col--;
+			bala[jugador][n_bala].col--;
 			break;
 		    case norte:
-			bala[jugador][asignar].fila--;
+			bala[jugador][n_bala].fila--;
 			break;
 		    case sur:
-			bala[jugador][asignar].fila++;
+			bala[jugador][n_bala].fila++;
 			break;
 		}
 
-		if(tablero[bala[jugador][asignar].fila][bala[jugador][asignar].col] == 'H')
-		    bala[jugador][asignar].se_mueve = false;
+		if(tablero[bala[jugador][n_bala].fila][bala[jugador][n_bala].col] == 'H')
+		    bala[jugador][n_bala].se_mueve = false;
 		else
-		    if(tablero[bala[jugador][asignar].fila][bala[jugador][asignar].col] == '0' ||
-			tablero[bala[jugador][asignar].fila][bala[jugador][asignar].col] == '5'){
-			bala[jugador][asignar].se_mueve = false;
+		    if(tablero[bala[jugador][n_bala].fila][bala[jugador][n_bala].col] == '0' ||
+			tablero[bala[jugador][n_bala].fila][bala[jugador][n_bala].col] == '5'){
+			bala[jugador][n_bala].se_mueve = false;
 			if(jugador == 0){
 			    jugador_caido[0] = true;
 			    puntuacion[0]++;
@@ -222,42 +234,127 @@ void mover_bala(arma bala[][MAXAMO], char tablero[][N], bool jugador_caido[], in
 			}
 		    }
 		    else
-			tablero[bala[jugador][asignar].fila][bala[jugador][asignar].col] = '*';
+			tablero[bala[jugador][n_bala].fila][bala[jugador][n_bala].col] = '*';
 	    }
 
 }
 void pintar_tablero(char tablero[][N], int respuesta, int puntuacion[2]){
-    
+
+    init_pair(VV, COLOR_GREEN, COLOR_GREEN);//asigna el color que se le dara
+    init_pair(AV, COLOR_BLUE, COLOR_GREEN);
+    init_pair(MV, COLOR_MAGENTA, COLOR_GREEN);
+    init_pair(NV, COLOR_BLACK, COLOR_GREEN); 
+    init_pair(BV, COLOR_WHITE, COLOR_GREEN);
+    init_pair(RR, COLOR_RED, COLOR_RED);
     clear();
     for(int x=0; x<N; x++){
-	for(int y=0; y<N; y++)
-	    printw("%c", tablero[x][y]);
+	for(int y=0; y<N; y++){
+	    /*	    if(tablero[x][y] == ' '){
+		    attron(COLOR_PAIR(VV));
+		    printw("%c", tablero[x][y]);
+		    attroff(COLOR_PAIR(VV));
+		    }
+		    else
+		    if(tablero[x][y] == 'H'){
+		    attron(COLOR_PAIR(RR));
+		    printw("%c", tablero[x][y]);
+		    attroff(COLOR_PAIR(RR));
+		    }
+		    else
+		    if(tablero[x][y] == CMUNICION){
+		    attron(COLOR_PAIR(NV));
+		    printw("%c", tablero[x][y]);
+		    attroff(COLOR_PAIR(NV));
+		    }
+		    else
+		    if(tablero[x][y] == CARACTERJ1){
+		    attron(COLOR_PAIR(AV));
+		    printw("%c", tablero[x][y]);
+		    attroff(COLOR_PAIR(AV));
+		    }
+		    else
+		    if(tablero[x][y] == CARACTERJ2){
+		    attron(COLOR_PAIR(MV));
+		    printw("%c", tablero[x][y]);
+		    attroff(COLOR_PAIR(MV));
+		    }
+		    else
+		    if(tablero[x][y] == ARMA){
+		    attron(COLOR_PAIR(BV));
+		    printw("%c", tablero[x][y]);
+		    attroff(COLOR_PAIR(BV));
+		    }
+		    else
+
+		    printw("%c", tablero[x][y]);
+	     */
+
+	    switch(tablero[x][y]){
+		case ' ':
+		    attron(COLOR_PAIR(VV));
+		    printw("%c", tablero[x][y]);
+		    attroff(COLOR_PAIR(VV));
+		    break;
+		case 'H':
+		    attron(COLOR_PAIR(RR));
+		    printw("%c", tablero[x][y]);
+		    attroff(COLOR_PAIR(RR));
+
+		    break;
+		case CMUNICION:
+		    attron(COLOR_PAIR(NV));
+		    printw("%c", tablero[x][y]);
+		    attroff(COLOR_PAIR(NV));
+
+		    break;
+		case CARACTERJ1:
+		    attron(COLOR_PAIR(AV));
+		    printw("%c", tablero[x][y]);
+		    attroff(COLOR_PAIR(AV));
+		    break;
+
+		case CARACTERJ2:
+		    attron(COLOR_PAIR(MV));
+		    printw("%c", tablero[x][y]);
+		    attroff(COLOR_PAIR(MV));
+		    break;
+
+		case ARMA:
+		    attron(COLOR_PAIR(BV));
+		    printw("%c", tablero[x][y]);
+		    attroff(COLOR_PAIR(BV));
+		    break;
+	    }
+
+	}
 	printw("\n");
     }
-    printw("J1-%i  J2-%i\n", puntuacion[0], puntuacion[1]);
+    printw("J1-%i  J2-%i\n", puntuacion[J1], puntuacion[J2]);
     refresh();
 }
 void bucle_juego(){
 
     int respuesta,
-	balas_disparadas[2],
-	puntuacion[2];
-    int pos_jugadores[2][2];
+	balas_disparadas[NJUGADORES],//cantidad de balas que se han disparado
+	puntuacion[NJUGADORES];
+    int pos_jugadores[NJUGADORES][COORDENADAS];
     char tablero[N][N];
-    Direccion apunta[2];
-    arma bala[2][MAXAMO];
-    bool jugador_caido[2];
+    Direccion apunta[NJUGADORES];
+    arma bala[NJUGADORES][MAXAMO];//balas de cada jugador
+    bool jugador_caido[NJUGADORES];
 
-    puntuacion[0] = puntuacion[1] = 0;
+    puntuacion[J1] = puntuacion[J2] = 0;
+
     do{
-	balas_disparadas[0] = balas_disparadas[1] = 0;
+	//inicializan todo antes de la partida y despues de que un jugador muera
+	balas_disparadas[J1] = balas_disparadas[J2] = 0;
 
-	for(int m_jugador=0; m_jugador<2; m_jugador++)
+	for(int m_jugador=0; m_jugador<NJUGADORES; m_jugador++)
 	    for(int municion=0; municion<MAXAMO; municion++)
 		bala[m_jugador][municion].se_mueve = false;
 
-	pos_jugadores[0][0] = pos_jugadores[0][1] = 5;
-	pos_jugadores[1][0] = pos_jugadores[1][1] = 10;
+	pos_jugadores[J1][FILA] = pos_jugadores[J1][COLUMNA] = 5;
+	pos_jugadores[J2][FILA] = pos_jugadores[J2][COLUMNA] = 10;
 
 	for(int x=0; x<N; x++)
 	    for(int y=0; y<N; y++)
@@ -265,14 +362,15 @@ void bucle_juego(){
 		    tablero[x][y] = 'H';
 		else
 		    tablero[x][y] = ' ';
-	tablero[pos_jugadores[0][0]][pos_jugadores[0][1]] = '0';
-	tablero[pos_jugadores[1][0]][pos_jugadores[1][1]] = '5';
-	tablero[pos_jugadores[0][0]][pos_jugadores[0][1]+1] = 
-	    tablero[pos_jugadores[1][0]][pos_jugadores[1][1]+1] = '=';
-	apunta[0] = apunta[1] = este;
+
+	tablero[pos_jugadores[J1][FILA]][pos_jugadores[J1][COLUMNA]] = '0';
+	tablero[pos_jugadores[J2][FILA]][pos_jugadores[J2][COLUMNA]] = '5';
+	tablero[pos_jugadores[J1][FILA]][pos_jugadores[J1][COLUMNA]+1] = 
+	    tablero[pos_jugadores[J2][FILA]][pos_jugadores[J2][COLUMNA]+1] = '=';
+	apunta[J1] = apunta[J2] = este;
 
 
-	jugador_caido[0] = jugador_caido[1] = false;
+	jugador_caido[J1] = jugador_caido[J2] = false;
 
 	do{
 	    timeout( 100 );
@@ -280,7 +378,7 @@ void bucle_juego(){
 	    respuesta = movimiento();
 	    mover_jugadores(respuesta, tablero, pos_jugadores, apunta, bala, balas_disparadas);
 	    mover_bala(bala, tablero, jugador_caido, puntuacion);
-	}while(respuesta != EXIT && jugador_caido[0] != true && jugador_caido[1] != true);
+	}while(respuesta != EXIT && jugador_caido[J1] != true && jugador_caido[J2] != true);
     }while(respuesta != EXIT);
 }
 int main(int argc, char *argv[]){
