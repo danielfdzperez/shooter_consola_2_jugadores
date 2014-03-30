@@ -4,7 +4,7 @@
 #include <ncurses.h>
 #include <string.h>
 
-#define N 20 //cantidad de celdas del mapa
+#define N 50 //cantidad de celdas del mapa
 #define EXIT 27
 #define DERECHA 100 //la d
 #define IZQUIERDA 97 //la a
@@ -33,35 +33,48 @@ struct arma {
     bool se_mueve;
 };
 
+void comprobacion(){
+
+    int respuesta;
+
+    if( LINES < N || COLS < N ){
+	while( (LINES > N || COLS > N) && respuesta != EXIT){
+	    erase();
+	    mvprintw( LINES/2, COLS/2 - 15, "LINES %d >= %d -- COLS %d >= %d",
+		    LINES, N, COLS, N );
+	    respuesta = getch();
+	    refresh();
+	}
+	clear();
+    }
+    if (respuesta == EXIT){
+	endwin(); 
+	exit(EXIT_FAILURE);
+    }
+}
+//inicializa la direccion de la bala
 void inicializar_bala(arma bala[], int pos_jugadores[], int bala_disparada){
     switch(bala[bala_disparada].direccion){
 	case norte:
-	    bala[bala_disparada].col = pos_jugadores[1];
-	    bala[bala_disparada].fila = pos_jugadores[0]-1;
+	    bala[bala_disparada].col = pos_jugadores[COLUMNA];
+	    bala[bala_disparada].fila = pos_jugadores[FILA]-1;
 	    break;
 	case sur:
-	    bala[bala_disparada].col = pos_jugadores[1];
-	    bala[bala_disparada].fila = pos_jugadores[0]+1;
+	    bala[bala_disparada].col = pos_jugadores[COLUMNA];
+	    bala[bala_disparada].fila = pos_jugadores[FILA]+1;
 	    break;
 	case este:
-	    bala[bala_disparada].col = pos_jugadores[1]+1;
-	    bala[bala_disparada].fila = pos_jugadores[0];
+	    bala[bala_disparada].col = pos_jugadores[COLUMNA]+1;
+	    bala[bala_disparada].fila = pos_jugadores[FILA];
 	    break;
 	case oeste:
-	    bala[bala_disparada].col = pos_jugadores[1]-1;
-	    bala[bala_disparada].fila = pos_jugadores[0];
+	    bala[bala_disparada].col = pos_jugadores[COLUMNA]-1;
+	    bala[bala_disparada].fila = pos_jugadores[FILA];
 	    break;
     }
 
 }
-int movimiento(){
-    int respuesta;
-    //coge los caracteres introducidos por el usuario
-    respuesta = getch();//coge los caracteres
-    //compara que la respuesta es correcta
-    return respuesta;
-}
-void mover_jugadores(int respuesta, char tablero[][N], int pos_jugadores[][2], Direccion apunta[], 
+void mover_jugadores(int respuesta, char tablero[][N], int pos_jugadores[][COORDENADAS], Direccion apunta[], 
 	arma bala[][MAXAMO], int balas_disparadas[]){
 
     static Direccion direccion_anterior[2];
@@ -70,27 +83,27 @@ void mover_jugadores(int respuesta, char tablero[][N], int pos_jugadores[][2], D
     for(int borrar=0; borrar<2; borrar++)
 	switch(direccion_anterior[borrar]){
 	    case este:
-		tablero[pos_jugadores[borrar][0]][pos_jugadores[borrar][1]+1] = ' ';
+		tablero[pos_jugadores[borrar][FILA]][pos_jugadores[borrar][COLUMNA]+1] = ' ';
 		break;
 	    case oeste:
-		tablero[pos_jugadores[borrar][0]][pos_jugadores[borrar][1]-1] = ' ';
+		tablero[pos_jugadores[borrar][FILA]][pos_jugadores[borrar][COLUMNA]-1] = ' ';
 		break;
 	    case norte:
-		tablero[pos_jugadores[borrar][0]-1][pos_jugadores[borrar][1]] = ' ';
+		tablero[pos_jugadores[borrar][FILA]-1][pos_jugadores[borrar][COLUMNA]] = ' ';
 		break;
 	    case sur:
-		tablero[pos_jugadores[borrar][0]+1][pos_jugadores[borrar][1]] = ' ';
+		tablero[pos_jugadores[borrar][FILA]+1][pos_jugadores[borrar][COLUMNA]] = ' ';
 		break;
 	}
 
     switch(respuesta){
 
 	case KEY_RIGHT:
-	    if(tablero[pos_jugadores[0][0]][pos_jugadores[0][1]+2] != 'H' &&
-		    tablero[pos_jugadores[0][0]][pos_jugadores[0][1]+2] != CARACTERJ2){
-		tablero[pos_jugadores[0][0]][pos_jugadores[0][1]] = ' ';
-		pos_jugadores[0][1] ++;
-		apunta[0] = este;
+	    if(tablero[pos_jugadores[J1][FILA]][pos_jugadores[J1][1]+2] != 'H' &&
+		    tablero[pos_jugadores[J1][FILA]][pos_jugadores[J1][1]+2] != CARACTERJ2){
+		tablero[pos_jugadores[J1][FILA]][pos_jugadores[J1][1]] = ' ';
+		pos_jugadores[J1][1] ++;
+		apunta[J1] = este;
 	    }
 	    break;
 
@@ -225,12 +238,11 @@ void mover_bala(arma bala[][MAXAMO], char tablero[][N], bool jugador_caido[], in
 			break;
 		}
 
-		if(tablero[bala[jugador][n_bala].fila][bala[jugador][n_bala].col] == 'H' || 
-			tablero[bala[jugador][n_bala].fila][bala[jugador][n_bala].col] == ARMA)
+		if(tablero[bala[jugador][n_bala].fila][bala[jugador][n_bala].col] == 'H')
 		    bala[jugador][n_bala].se_mueve = false;
 		else
 		    if(tablero[bala[jugador][n_bala].fila][bala[jugador][n_bala].col] == '0' ||
-			tablero[bala[jugador][n_bala].fila][bala[jugador][n_bala].col] == '5'){
+			    tablero[bala[jugador][n_bala].fila][bala[jugador][n_bala].col] == '5'){
 			bala[jugador][n_bala].se_mueve = false;
 			if(jugador == 0){
 			    jugador_caido[0] = true;
@@ -257,45 +269,6 @@ void pintar_tablero(char tablero[][N], int respuesta, int puntuacion[2]){
     clear();
     for(int x=0; x<N; x++){
 	for(int y=0; y<N; y++){
-	    /*	    if(tablero[x][y] == ' '){
-		    attron(COLOR_PAIR(VV));
-		    printw("%c", tablero[x][y]);
-		    attroff(COLOR_PAIR(VV));
-		    }
-		    else
-		    if(tablero[x][y] == 'H'){
-		    attron(COLOR_PAIR(RR));
-		    printw("%c", tablero[x][y]);
-		    attroff(COLOR_PAIR(RR));
-		    }
-		    else
-		    if(tablero[x][y] == CMUNICION){
-		    attron(COLOR_PAIR(NV));
-		    printw("%c", tablero[x][y]);
-		    attroff(COLOR_PAIR(NV));
-		    }
-		    else
-		    if(tablero[x][y] == CARACTERJ1){
-		    attron(COLOR_PAIR(AV));
-		    printw("%c", tablero[x][y]);
-		    attroff(COLOR_PAIR(AV));
-		    }
-		    else
-		    if(tablero[x][y] == CARACTERJ2){
-		    attron(COLOR_PAIR(MV));
-		    printw("%c", tablero[x][y]);
-		    attroff(COLOR_PAIR(MV));
-		    }
-		    else
-		    if(tablero[x][y] == ARMA){
-		    attron(COLOR_PAIR(BV));
-		    printw("%c", tablero[x][y]);
-		    attroff(COLOR_PAIR(BV));
-		    }
-		    else
-
-		    printw("%c", tablero[x][y]);
-	     */
 
 	    switch(tablero[x][y]){
 		case ' ':
@@ -373,17 +346,17 @@ void bucle_juego(){
 
 	tablero[pos_jugadores[J1][FILA]][pos_jugadores[J1][COLUMNA]] = '0';
 	tablero[pos_jugadores[J2][FILA]][pos_jugadores[J2][COLUMNA]] = '5';
-	tablero[pos_jugadores[J1][FILA]][pos_jugadores[J1][COLUMNA]+1] = 
+	tablero[pos_jugadores[J1][FILA]][pos_jugadores[J1][COLUMNA]+1] =  
 	    tablero[pos_jugadores[J2][FILA]][pos_jugadores[J2][COLUMNA]+1] = '=';
 	apunta[J1] = apunta[J2] = este;
 
 
 	jugador_caido[J1] = jugador_caido[J2] = false;
-
+	pintar_tablero(tablero, respuesta, puntuacion);
 	do{
 	    timeout( 100 );
 	    pintar_tablero(tablero, respuesta, puntuacion);
-	    respuesta = movimiento();
+	    respuesta = getch();
 	    mover_jugadores(respuesta, tablero, pos_jugadores, apunta, bala, balas_disparadas);
 	    mover_bala(bala, tablero, jugador_caido, puntuacion);
 	}while(respuesta != EXIT && jugador_caido[J1] != true && jugador_caido[J2] != true);
@@ -396,6 +369,7 @@ int main(int argc, char *argv[]){
     noecho();
     start_color();
 
+    comprobacion();
     bucle_juego();
 
     endwin(); 
