@@ -38,7 +38,7 @@ void comprobacion(){
     int respuesta;
 
     if( LINES < N || COLS < N ){
-	while( (LINES > N || COLS > N) && respuesta != EXIT){
+	while( (LINES < N || COLS < N) && respuesta != EXIT){
 	    erase();
 	    mvprintw( LINES/2, COLS/2 - 15, "LINES %d >= %d -- COLS %d >= %d",
 		    LINES, N, COLS, N );
@@ -266,7 +266,7 @@ void pintar_tablero(char tablero[][N], int respuesta, int puntuacion[2]){
     init_pair(NV, COLOR_BLACK, COLOR_GREEN); 
     init_pair(BV, COLOR_WHITE, COLOR_GREEN);
     init_pair(RR, COLOR_RED, COLOR_RED);
-    clear();
+    erase();
     for(int x=0; x<N; x++){
 	for(int y=0; y<N; y++){
 
@@ -354,7 +354,7 @@ void bucle_juego(){
 	jugador_caido[J1] = jugador_caido[J2] = false;
 	pintar_tablero(tablero, respuesta, puntuacion);
 	do{
-	    timeout( 100 );
+	    timeout( 50 );
 	    pintar_tablero(tablero, respuesta, puntuacion);
 	    respuesta = getch();
 	    mover_jugadores(respuesta, tablero, pos_jugadores, apunta, bala, balas_disparadas);
