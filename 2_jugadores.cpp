@@ -108,56 +108,56 @@ void mover_jugadores(int respuesta, char tablero[][N], int pos_jugadores[][COORD
 	    break;
 
 	case DERECHA:
-	    if(tablero[pos_jugadores[1][0]][pos_jugadores[1][1]+2] != 'H' &&
+	    if(tablero[pos_jugadores[J2][0]][pos_jugadores[J2][1]+2] != 'H' &&
 		    tablero[pos_jugadores[J2][0]][pos_jugadores[J2][1]+2] != CARACTERJ1){
-		tablero[pos_jugadores[1][0]][pos_jugadores[1][1]] = ' ';
-		pos_jugadores[1][1] ++;
-		apunta[1] = este;
+		tablero[pos_jugadores[J2][0]][pos_jugadores[J2][1]] = ' ';
+		pos_jugadores[J2][1] ++;
+		apunta[J2] = este;
 	    }
 	    break;
 
 	case KEY_LEFT:
-	    if(tablero[pos_jugadores[0][0]][pos_jugadores[0][1]-2] != 'H' &&
-		    tablero[pos_jugadores[0][0]][pos_jugadores[0][1]-2] != CARACTERJ2){
-		tablero[pos_jugadores[0][0]][pos_jugadores[0][1]] = ' ';
-		pos_jugadores[0][1] --;
-		apunta[0] = oeste;
+	    if(tablero[pos_jugadores[J1][0]][pos_jugadores[J1][1]-2] != 'H' &&
+		    tablero[pos_jugadores[J1][0]][pos_jugadores[J1][1]-2] != CARACTERJ2){
+		tablero[pos_jugadores[J1][0]][pos_jugadores[J1][1]] = ' ';
+		pos_jugadores[J1][1] --;
+		apunta[J1] = oeste;
 	    }
 	    break;
 
 	case IZQUIERDA:
-	    if(tablero[pos_jugadores[1][0]][pos_jugadores[1][1] - 2] != 'H' &&
+	    if(tablero[pos_jugadores[J2][0]][pos_jugadores[J2][1] - 2] != 'H' &&
 		    tablero[pos_jugadores[J2][0]][pos_jugadores[J2][1]-2] != CARACTERJ1){
-		tablero[pos_jugadores[1][0]][pos_jugadores[1][1]] = ' ';
-		pos_jugadores[1][1] --;
-		apunta[1] = oeste;
+		tablero[pos_jugadores[J2][0]][pos_jugadores[J2][1]] = ' ';
+		pos_jugadores[J2][1] --;
+		apunta[J2] = oeste;
 	    }
 	    break;
 
 	case KEY_UP:
-	    if(tablero[pos_jugadores[0][0] - 2][pos_jugadores[0][1]] != 'H' &&
-		    tablero[pos_jugadores[0][0]-2][pos_jugadores[0][1]] != CARACTERJ2){
-		tablero[pos_jugadores[0][0]][pos_jugadores[0][1]] = ' '; 
-		pos_jugadores[0][0] --;
-		apunta[0] = norte;
+	    if(tablero[pos_jugadores[J1][0] - 2][pos_jugadores[J1][1]] != 'H' &&
+		    tablero[pos_jugadores[J1][0]-2][pos_jugadores[J1][1]] != CARACTERJ2){
+		tablero[pos_jugadores[J1][0]][pos_jugadores[J][1]] = ' '; 
+		pos_jugadores[J1][0] --;
+		apunta[J1] = norte;
 	    }
 	    break;
 
 	case ARRIBA:
-	    if(tablero[pos_jugadores[1][0] - 2][pos_jugadores[1][1]] != 'H' &&
+	    if(tablero[pos_jugadores[J2][0] - 2][pos_jugadores[J2][1]] != 'H' &&
 		    tablero[pos_jugadores[J2][0]-2][pos_jugadores[J2][1]] != CARACTERJ1){
-		tablero[pos_jugadores[1][0]][pos_jugadores[1][1]] = ' ';
-		pos_jugadores[1][0] --;
-		apunta[1] = norte;
+		tablero[pos_jugadores[J2][0]][pos_jugadores[J2][1]] = ' ';
+		pos_jugadores[J2][0] --;
+		apunta[J2] = norte;
 	    }
 	    break;
 
 	case KEY_DOWN:
-	    if(tablero[pos_jugadores[0][0] + 2][pos_jugadores[0][1]] != 'H' &&
-		    tablero[pos_jugadores[0][0]+2][pos_jugadores[J1][1]] != CARACTERJ2){
-		tablero[pos_jugadores[0][0]][pos_jugadores[0][1]] = ' ';
-		pos_jugadores[0][0] ++;
-		apunta[0] = sur;
+	    if(tablero[pos_jugadores[J1][0] + 2][pos_jugadores[J1][1]] != 'H' &&
+		    tablero[pos_jugadores[J1][0]+2][pos_jugadores[J1][1]] != CARACTERJ2){
+		tablero[pos_jugadores[J1][0]][pos_jugadores[J1][1]] = ' ';
+		pos_jugadores[J1][0] ++;
+		apunta[J1] = sur;
 	    }
 	    break;
 
