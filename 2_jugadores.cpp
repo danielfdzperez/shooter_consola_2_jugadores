@@ -4,7 +4,7 @@
 #include <ncurses.h>
 #include <string.h>
 
-#define N 50 //cantidad de celdas del mapa
+#define N 20 //cantidad de celdas del mapa
 #define EXIT 27
 #define DERECHA 100 //la d
 #define IZQUIERDA 97 //la a
@@ -137,7 +137,7 @@ void mover_jugadores(int respuesta, char tablero[][N], int pos_jugadores[][COORD
 	case KEY_UP:
 	    if(tablero[pos_jugadores[J1][0] - 2][pos_jugadores[J1][1]] != 'H' &&
 		    tablero[pos_jugadores[J1][0]-2][pos_jugadores[J1][1]] != CARACTERJ2){
-		tablero[pos_jugadores[J1][0]][pos_jugadores[J][1]] = ' '; 
+		tablero[pos_jugadores[J1][0]][pos_jugadores[J1][1]] = ' '; 
 		pos_jugadores[J1][0] --;
 		apunta[J1] = norte;
 	    }
