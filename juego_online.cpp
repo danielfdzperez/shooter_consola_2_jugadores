@@ -1,4 +1,4 @@
-#include <stdio.h>
+//#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <ncurses.h>
@@ -35,7 +35,7 @@
 enum Direccion{norte = 1, sur, este, oeste};
 enum Colores{VV = 1, AV, MV, NV, BV, RR};
 
-struct arma {
+struct TArma {
     Direccion direccion;
     int col, fila;
     bool se_mueve;
@@ -97,7 +97,7 @@ void esperar_jugadores(int socket_fd){
 }
 
 //inicializa la direccion de la bala
-void inicializar_bala(arma bala[], int pos_jugadores[], int bala_disparada){
+void inicializar_bala(TArma bala[], int pos_jugadores[], int bala_disparada){
     switch(bala[bala_disparada].direccion){
 	case norte:
 	    bala[bala_disparada].col = pos_jugadores[COLUMNA];
@@ -125,7 +125,7 @@ void enviar_datos(int fd, int respuesta){
     enviar(fd, buffer);
 }
 
-void recibir_datos(int fd, int pos_jugadores[][COORDENADAS], Direccion apunta[], bool jugador_caido[], arma bala[][MAXAMO]){
+void recibir_datos(int fd, int pos_jugadores[][COORDENADAS], Direccion apunta[], bool jugador_caido[], TArma bala[][MAXAMO]){
     char buffer[5];
 
 
@@ -156,26 +156,27 @@ void recibir_datos(int fd, int pos_jugadores[][COORDENADAS], Direccion apunta[],
 
 }
 
-void vaciar_tablero(char tablero[N][N], pos_jugadores[NJUGADORES][COORDENADAS], apunta[NJUGADORES], bala[NJUGADORES][MAXAMO]){
+void vaciar_tablero(char tablero[N][N], int pos_jugadores[NJUGADORES][COORDENADAS], 
+	Direccion apunta[NJUGADORES], TArma bala[NJUGADORES][MAXAMO]){
 
     //Limpia a los jugadores
     for(int jugador=0; jugador<NJUGADORES; jugador++)
 	tablero[pos_jugadores[jugador][0]][pos_jugadores[jugador][1]] = ' ';
 
-    //Limpia el arma
-    for(int pintar_arma=0; pintar_arma<2; pintar_arma++)
-	switch(apunta[pintar_arma]){
+    //Limpia el TArma
+    for(int pintar_TArma=0; pintar_TArma<2; pintar_TArma++)
+	switch(apunta[pintar_TArma]){
 	    case este:
-		tablero[pos_jugadores[pintar_arma][0]][pos_jugadores[pintar_arma][1]+1] = ' ';
+		tablero[pos_jugadores[pintar_TArma][0]][pos_jugadores[pintar_TArma][1]+1] = ' ';
 		break;
 	    case oeste:
-		tablero[pos_jugadores[pintar_arma][0]][pos_jugadores[pintar_arma][1]-1] = ' ';
+		tablero[pos_jugadores[pintar_TArma][0]][pos_jugadores[pintar_TArma][1]-1] = ' ';
 		break;
 	    case norte:
-		tablero[pos_jugadores[pintar_arma][0]-1][pos_jugadores[pintar_arma][1]] = ' ';
+		tablero[pos_jugadores[pintar_TArma][0]-1][pos_jugadores[pintar_TArma][1]] = ' ';
 		break;
 	    case sur:
-		tablero[pos_jugadores[pintar_arma][0]+1][pos_jugadores[pintar_arma][1]] = ' ';
+		tablero[pos_jugadores[pintar_TArma][0]+1][pos_jugadores[pintar_TArma][1]] = ' ';
 		break;
 	}
 
@@ -186,26 +187,27 @@ void vaciar_tablero(char tablero[N][N], pos_jugadores[NJUGADORES][COORDENADAS], 
 		tablero[bala[jugador][n_bala].fila][bala[jugador][n_bala].col] = ' ';
 }
 
-void rellenar_tablero(char tablero[N][N], pos_jugadores[NJUGADORES][COORDENADAS], apunta[NJUGADORES], bala[NJUGADORES][MAXAMO]){
+void rellenar_tablero(char tablero[N][N], int pos_jugadores[NJUGADORES][COORDENADAS], 
+	Direccion apunta[NJUGADORES], TArma bala[NJUGADORES][MAXAMO]){
 
     //Posiciona a los jugadores
     tablero[pos_jugadores[1][0]][pos_jugadores[1][1]] = '5';
     tablero[pos_jugadores[0][0]][pos_jugadores[0][1]] = '0';
 
-    //Posiciona el arma
-    for(int pintar_arma=0; pintar_arma<2; pintar_arma++)
-	switch(apunta[pintar_arma]){
+    //Posiciona el TArma
+    for(int pintar_TArma=0; pintar_TArma<2; pintar_TArma++)
+	switch(apunta[pintar_TArma]){
 	    case este:
-		tablero[pos_jugadores[pintar_arma][0]][pos_jugadores[pintar_arma][1]+1] = '=';
+		tablero[pos_jugadores[pintar_TArma][0]][pos_jugadores[pintar_TArma][1]+1] = '=';
 		break;
 	    case oeste:
-		tablero[pos_jugadores[pintar_arma][0]][pos_jugadores[pintar_arma][1]-1] = '=';
+		tablero[pos_jugadores[pintar_TArma][0]][pos_jugadores[pintar_TArma][1]-1] = '=';
 		break;
 	    case norte:
-		tablero[pos_jugadores[pintar_arma][0]-1][pos_jugadores[pintar_arma][1]] = '=';
+		tablero[pos_jugadores[pintar_TArma][0]-1][pos_jugadores[pintar_TArma][1]] = '=';
 		break;
 	    case sur:
-		tablero[pos_jugadores[pintar_arma][0]+1][pos_jugadores[pintar_arma][1]] = '=';
+		tablero[pos_jugadores[pintar_TArma][0]+1][pos_jugadores[pintar_TArma][1]] = '=';
 		break;
 	}
 
@@ -218,11 +220,11 @@ void rellenar_tablero(char tablero[N][N], pos_jugadores[NJUGADORES][COORDENADAS]
 }
 
 void mover_jugadores(int respuesta, char tablero[][N], int pos_jugadores[][COORDENADAS], Direccion apunta[], 
-	arma bala[][MAXAMO], int balas_disparadas[]){
+	TArma bala[][MAXAMO], int balas_disparadas[]){
 
     static Direccion direccion_anterior[2];
 
-    //borra el arma
+    //borra el TArma
     for(int borrar=0; borrar<2; borrar++)
 	switch(direccion_anterior[borrar]){
 	    case este:
@@ -338,19 +340,19 @@ void mover_jugadores(int respuesta, char tablero[][N], int pos_jugadores[][COORD
     tablero[pos_jugadores[1][0]][pos_jugadores[1][1]] = '5';
     tablero[pos_jugadores[0][0]][pos_jugadores[0][1]] = '0';
 
-    for(int pintar_arma=0; pintar_arma<2; pintar_arma++)
-	switch(apunta[pintar_arma]){
+    for(int pintar_TArma=0; pintar_TArma<2; pintar_TArma++)
+	switch(apunta[pintar_TArma]){
 	    case este:
-		tablero[pos_jugadores[pintar_arma][0]][pos_jugadores[pintar_arma][1]+1] = '=';
+		tablero[pos_jugadores[pintar_TArma][0]][pos_jugadores[pintar_TArma][1]+1] = '=';
 		break;
 	    case oeste:
-		tablero[pos_jugadores[pintar_arma][0]][pos_jugadores[pintar_arma][1]-1] = '=';
+		tablero[pos_jugadores[pintar_TArma][0]][pos_jugadores[pintar_TArma][1]-1] = '=';
 		break;
 	    case norte:
-		tablero[pos_jugadores[pintar_arma][0]-1][pos_jugadores[pintar_arma][1]] = '=';
+		tablero[pos_jugadores[pintar_TArma][0]-1][pos_jugadores[pintar_TArma][1]] = '=';
 		break;
 	    case sur:
-		tablero[pos_jugadores[pintar_arma][0]+1][pos_jugadores[pintar_arma][1]] = '=';
+		tablero[pos_jugadores[pintar_TArma][0]+1][pos_jugadores[pintar_TArma][1]] = '=';
 		break;
 	}
 
@@ -361,7 +363,7 @@ void mover_jugadores(int respuesta, char tablero[][N], int pos_jugadores[][COORD
 }
 
 //mueve a las balas
-void mover_bala(arma bala[][MAXAMO], char tablero[][N], bool jugador_caido[], int puntuacion[]){
+void mover_bala(TArma bala[][MAXAMO], char tablero[][N], bool jugador_caido[], int puntuacion[]){
 
     for(int jugador=0; jugador<NJUGADORES; jugador++)
 	for(int n_bala=0; n_bala<MAXAMO; n_bala++)
@@ -467,17 +469,17 @@ void bucle_juego(int socket_fd){
     int pos_jugadores[NJUGADORES][COORDENADAS];
     char tablero[N][N];
     Direccion apunta[NJUGADORES];
-    arma bala[NJUGADORES][MAXAMO];//balas de cada jugador
+    TArma bala[NJUGADORES][MAXAMO];//balas de cada jugador
     bool jugador_caido[NJUGADORES];
 
-    puntuacion[J1] = puntuacion[J2] = 0;
+    //puntuacion[J1] = puntuacion[J2] = 0;
 
     do{
 	//inicializan todo antes de la partida y despues de que un jugador muera
 	//balas_disparadas[J1] = balas_disparadas[J2] = 0;
 
 	//for(int m_jugador=0; m_jugador<NJUGADORES; m_jugador++)
-	 //   for(int municion=0; municion<MAXAMO; municion++)
+	  // for(int municion=0; municion<MAXAMO; municion++)
 	//	bala[m_jugador][municion].se_mueve = false;
 
 	//pos_jugadores[J1][FILA] = pos_jugadores[J1][COLUMNA] = 5;
@@ -490,11 +492,11 @@ void bucle_juego(int socket_fd){
 		else
 		    tablero[x][y] = ' ';
 
-       // tablero[pos_jugadores[J1][FILA]][pos_jugadores[J1][COLUMNA]] = '0';
-       // tablero[pos_jugadores[J2][FILA]][pos_jugadores[J2][COLUMNA]] = '5';
-       // tablero[pos_jugadores[J1][FILA]][pos_jugadores[J1][COLUMNA]+1] =  
-       //    tablero[pos_jugadores[J2][FILA]][pos_jugadores[J2][COLUMNA]+1] = '=';
-       // apunta[J1] = apunta[J2] = este;
+        //tablero[pos_jugadores[J1][FILA]][pos_jugadores[J1][COLUMNA]] = '0';
+        //tablero[pos_jugadores[J2][FILA]][pos_jugadores[J2][COLUMNA]] = '5';
+        //tablero[pos_jugadores[J1][FILA]][pos_jugadores[J1][COLUMNA]+1] =  
+          // tablero[pos_jugadores[J2][FILA]][pos_jugadores[J2][COLUMNA]+1] = '=';
+        //apunta[J1] = apunta[J2] = este;
 
 
 	//jugador_caido[J1] = jugador_caido[J2] = false;
@@ -507,7 +509,7 @@ void bucle_juego(int socket_fd){
 	    pintar_tablero(tablero, puntuacion);
 	    respuesta = getch();
 	    enviar_datos(socket_fd, respuesta);
-	    limpiar_tablero(tablero, pos_jugadores, apunta, bala);
+	    vaciar_tablero(tablero, pos_jugadores, apunta, bala);
 	    recibir_datos(socket_fd, pos_jugadores, apunta, jugador_caido, bala);
 	    rellenar_tablero(tablero, pos_jugadores, apunta, bala);
 	    //mover_jugadores(respuesta, tablero, pos_jugadores, apunta, bala, balas_disparadas);
