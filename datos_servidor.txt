@@ -1,0 +1,58 @@
+Estructuras de datos que compartiran los hilos.
+
+Hilos encargados de recibir y enviar datos a los clientes compartiran la estructura TDatos, (H1 y H2).
+El hilo encargado de calcular las mecanicas del juego tendra la estructura TDatosCalculo, (HCalculo).
+
+H1 -> Recibe datos.
+H1 -> Aumenta el contador de espera.
+H1 -> Espera a que el contador sea menor que el maximo de jugadores.
+H1 -> Vuelve al principio hasta fin de conexion.
+
+H2 -> Recibe datos.
+H2 -> Aumenta el contador de espera.
+H2 -> Espera a que el contador sea menor que el maximo de jugadores.
+H2 -> Vuelve al principio hasta fin de conexion.
+
+HCalculo -> Espera a que el numero de jugadores esperando sea el maximo de jugadores permitido.
+HCalculo -> Calcula y alamcena los datos.
+HCalculo -> Pone a 0 el contador de clientes esperando a que finalice el calculo.
+HCalculo -> Vuelve al principio hasta fin de conexion.
+
+N          -> Tamaño del tablero.
+MAXBALAS   -> La cantidad maxima de balas que puede disparar un jugador.
+NJUGADORES -> Numero maximo de jugadores.
+
+Tipos de datos necesarios:
+
+enum TDireccion { norte=1, sur, este, oeste};
+
+struct TPosicion{
+    int fila;
+    int columna;
+};
+
+struct TBala{
+    TDireccion direccion;
+    struct TPosicion posicion;
+    bool se_mueve;
+};
+
+struct TJugador{
+    int respuesta;
+    int n_balas_disparadas;
+    int puntuacion;
+    struct TPosicion posicion;
+    TDireccion direccion;
+    bool abatido;
+    struct TBala bala[MAXBALAS];
+};
+
+struct TDatos{
+    int clientes_esperando; //Contador que indica los clientes que espran un resultado de calculo.
+    TJugador jugador[NJUGADORES];
+};
+
+struct TDatosCalculo{
+    struct TDatos *datos_clientes;
+    char tablero[N][N];
+};
