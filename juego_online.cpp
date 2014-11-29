@@ -164,19 +164,19 @@ void vaciar_tablero(char tablero[N][N], int pos_jugadores[NJUGADORES][COORDENADA
 	tablero[pos_jugadores[jugador][0]][pos_jugadores[jugador][1]] = ' ';
 
     //Limpia el TArma
-    for(int pintar_TArma=0; pintar_TArma<2; pintar_TArma++)
-	switch(apunta[pintar_TArma]){
+    for(int pintar_arma=0; pintar_arma<2; pintar_arma++)
+	switch(apunta[pintar_arma]){
 	    case este:
-		tablero[pos_jugadores[pintar_TArma][0]][pos_jugadores[pintar_TArma][1]+1] = ' ';
+		tablero[pos_jugadores[pintar_arma][0]][pos_jugadores[pintar_arma][1]+1] = ' ';
 		break;
 	    case oeste:
-		tablero[pos_jugadores[pintar_TArma][0]][pos_jugadores[pintar_TArma][1]-1] = ' ';
+		tablero[pos_jugadores[pintar_arma][0]][pos_jugadores[pintar_arma][1]-1] = ' ';
 		break;
 	    case norte:
-		tablero[pos_jugadores[pintar_TArma][0]-1][pos_jugadores[pintar_TArma][1]] = ' ';
+		tablero[pos_jugadores[pintar_arma][0]-1][pos_jugadores[pintar_arma][1]] = ' ';
 		break;
 	    case sur:
-		tablero[pos_jugadores[pintar_TArma][0]+1][pos_jugadores[pintar_TArma][1]] = ' ';
+		tablero[pos_jugadores[pintar_arma][0]+1][pos_jugadores[pintar_arma][1]] = ' ';
 		break;
 	}
 
@@ -195,19 +195,19 @@ void rellenar_tablero(char tablero[N][N], int pos_jugadores[NJUGADORES][COORDENA
     tablero[pos_jugadores[0][0]][pos_jugadores[0][1]] = '0';
 
     //Posiciona el TArma
-    for(int pintar_TArma=0; pintar_TArma<2; pintar_TArma++)
-	switch(apunta[pintar_TArma]){
+    for(int pintar_arma=0; pintar_arma<2; pintar_arma++)
+	switch(apunta[pintar_arma]){
 	    case este:
-		tablero[pos_jugadores[pintar_TArma][0]][pos_jugadores[pintar_TArma][1]+1] = '=';
+		tablero[pos_jugadores[pintar_arma][0]][pos_jugadores[pintar_arma][1]+1] = '=';
 		break;
 	    case oeste:
-		tablero[pos_jugadores[pintar_TArma][0]][pos_jugadores[pintar_TArma][1]-1] = '=';
+		tablero[pos_jugadores[pintar_arma][0]][pos_jugadores[pintar_arma][1]-1] = '=';
 		break;
 	    case norte:
-		tablero[pos_jugadores[pintar_TArma][0]-1][pos_jugadores[pintar_TArma][1]] = '=';
+		tablero[pos_jugadores[pintar_arma][0]-1][pos_jugadores[pintar_arma][1]] = '=';
 		break;
 	    case sur:
-		tablero[pos_jugadores[pintar_TArma][0]+1][pos_jugadores[pintar_TArma][1]] = '=';
+		tablero[pos_jugadores[pintar_arma][0]+1][pos_jugadores[pintar_arma][1]] = '=';
 		break;
 	}
 
@@ -340,19 +340,19 @@ void mover_jugadores(int respuesta, char tablero[][N], int pos_jugadores[][COORD
     tablero[pos_jugadores[1][0]][pos_jugadores[1][1]] = '5';
     tablero[pos_jugadores[0][0]][pos_jugadores[0][1]] = '0';
 
-    for(int pintar_TArma=0; pintar_TArma<2; pintar_TArma++)
-	switch(apunta[pintar_TArma]){
+    for(int pintar_arma=0; pintar_arma<2; pintar_arma++)
+	switch(apunta[pintar_arma]){
 	    case este:
-		tablero[pos_jugadores[pintar_TArma][0]][pos_jugadores[pintar_TArma][1]+1] = '=';
+		tablero[pos_jugadores[pintar_arma][0]][pos_jugadores[pintar_arma][1]+1] = '=';
 		break;
 	    case oeste:
-		tablero[pos_jugadores[pintar_TArma][0]][pos_jugadores[pintar_TArma][1]-1] = '=';
+		tablero[pos_jugadores[pintar_arma][0]][pos_jugadores[pintar_arma][1]-1] = '=';
 		break;
 	    case norte:
-		tablero[pos_jugadores[pintar_TArma][0]-1][pos_jugadores[pintar_TArma][1]] = '=';
+		tablero[pos_jugadores[pintar_arma][0]-1][pos_jugadores[pintar_arma][1]] = '=';
 		break;
 	    case sur:
-		tablero[pos_jugadores[pintar_TArma][0]+1][pos_jugadores[pintar_TArma][1]] = '=';
+		tablero[pos_jugadores[pintar_arma][0]+1][pos_jugadores[pintar_arma][1]] = '=';
 		break;
 	}
 
