@@ -3,6 +3,7 @@
 #include <time.h>
 #include <ncurses.h>
 #include <string.h>
+#include <stdio_ext.h>
 
 //Libreriras para la conexion online
 #include <unistd.h>
@@ -505,9 +506,10 @@ void bucle_juego(int socket_fd){
 	rellenar_tablero(tablero, pos_jugadores, apunta, bala);
 	pintar_tablero(tablero, puntuacion);
 	do{
-	    timeout( 50 );
+	    timeout( 1 );
 	    pintar_tablero(tablero, puntuacion);
 	    respuesta = getch();
+	    __fpurge(stdin);
 	    enviar_datos(socket_fd, respuesta);
 	    vaciar_tablero(tablero, pos_jugadores, apunta, bala);
 	    recibir_datos(socket_fd, pos_jugadores, apunta, jugador_caido, bala);
