@@ -1,20 +1,5 @@
 CC=g++
 
-.SUFFIXES: .o .cpp
-.cpp.o:
-	$(CC) -c $<
+juego_online : comunicacion.cpp juego_online.cpp
+	$(CC) -o juego_online comunicacion.cpp juego_online.cpp -lpthread -lncurses
 
-OBJETS: comunicacion.o juego_online.o
-
-juego_online : $(OBJETS)
-	$(CC) -o juego_online $(OBJECTS) -lpthread -lncurses
-
-comunicacion.o : comunicacion.h
-	$(CC) -c comunicacion.cpp
-
-juego_online.o : comunicacion.h
-	$(CC) -c juego_online.cpp
-
-.PHONY: clean
-clean :
-	-rm $(OBJECTS) juego_online

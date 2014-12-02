@@ -18,4 +18,4 @@ comunicacion.o: comunicacion.h
 
 .PHONY : clean
 clean:
-	-rm servidor $(OBJECTS)
+	-rm $(OBJECTS)
