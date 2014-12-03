@@ -1,4 +1,4 @@
-server: servidor.o comunicacion.o
+servidor: servidor.o comunicacion.o
 	    g++ servidor.o comunicacion.o -o servidor -lncurses -lpthread
 
 juego_online: juego_online.o comunicacion.o
