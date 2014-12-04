@@ -89,11 +89,11 @@ void conexion(int *socket_fd, const char* direccion, int puerto){
 void esperar_jugadores(int socket_fd){
     char buffer[1000];
     recibir(socket_fd, buffer);
-    if(!strcmp(buffer, "whait")){
+    if(!strcmp(buffer, "wait")){
 	printw("Esperando mas usuarios...\n");
 	refresh();
     }
-    while(!strcmp(buffer, "whait"))
+    while(!strcmp(buffer, "wait"))
 	recibir(socket_fd, buffer);
 }
 
@@ -126,7 +126,7 @@ void enviar_datos(int fd, int respuesta){
     enviar(fd, buffer);
 }
 
-void recibir_datos(int fd, int pos_jugadores[][COORDENADAS], Direccion apunta[], bool jugador_caido[], TArma bala[][MAXAMO]){
+void recibir_datos(int fd, int pos_jugadores[][COORDENADAS], Direccion apunta[], bool jugador_caido[], TArma bala[][MAXAMO], int puntuacion[NJUGADORES]){
     char buffer[5];
 
 
@@ -139,8 +139,10 @@ void recibir_datos(int fd, int pos_jugadores[][COORDENADAS], Direccion apunta[],
 	recibir(fd, buffer);
 	apunta[jugador] = (Direccion) atoi(buffer);
 	recibir(fd, buffer);
-        jugador_caido[jugador] = (bool) atoi(buffer);
-	}
+	jugador_caido[jugador] = (bool) atoi(buffer);
+	recibir(fd, buffer);
+	puntuacion[jugador] = atoi(buffer);
+    }
 
     //Actualiza las balas
     for(int jugador=0; jugador<NJUGADORES; jugador++)
@@ -473,19 +475,7 @@ void bucle_juego(int socket_fd){
     TArma bala[NJUGADORES][MAXAMO];//balas de cada jugador
     bool jugador_caido[NJUGADORES];
 
-    //puntuacion[J1] = puntuacion[J2] = 0;
-
     do{
-	//inicializan todo antes de la partida y despues de que un jugador muera
-	//balas_disparadas[J1] = balas_disparadas[J2] = 0;
-
-	//for(int m_jugador=0; m_jugador<NJUGADORES; m_jugador++)
-	  // for(int municion=0; municion<MAXAMO; municion++)
-	//	bala[m_jugador][municion].se_mueve = false;
-
-	//pos_jugadores[J1][FILA] = pos_jugadores[J1][COLUMNA] = 5;
-	//pos_jugadores[J2][FILA] = pos_jugadores[J2][COLUMNA] = 10;
-
 	for(int x=0; x<N; x++)
 	    for(int y=0; y<N; y++)
 		if(x == 0 || y == 0 || x == N-1 || y == N-1)
@@ -493,16 +483,7 @@ void bucle_juego(int socket_fd){
 		else
 		    tablero[x][y] = ' ';
 
-        //tablero[pos_jugadores[J1][FILA]][pos_jugadores[J1][COLUMNA]] = '0';
-        //tablero[pos_jugadores[J2][FILA]][pos_jugadores[J2][COLUMNA]] = '5';
-        //tablero[pos_jugadores[J1][FILA]][pos_jugadores[J1][COLUMNA]+1] =  
-          // tablero[pos_jugadores[J2][FILA]][pos_jugadores[J2][COLUMNA]+1] = '=';
-        //apunta[J1] = apunta[J2] = este;
-
-
-	//jugador_caido[J1] = jugador_caido[J2] = false;
-
-	recibir_datos(socket_fd, pos_jugadores, apunta, jugador_caido, bala);
+	recibir_datos(socket_fd, pos_jugadores, apunta, jugador_caido, bala, puntuacion);
 	rellenar_tablero(tablero, pos_jugadores, apunta, bala);
 	pintar_tablero(tablero, puntuacion);
 	do{
@@ -512,10 +493,8 @@ void bucle_juego(int socket_fd){
 	    __fpurge(stdin);
 	    enviar_datos(socket_fd, respuesta);
 	    vaciar_tablero(tablero, pos_jugadores, apunta, bala);
-	    recibir_datos(socket_fd, pos_jugadores, apunta, jugador_caido, bala);
+	    recibir_datos(socket_fd, pos_jugadores, apunta, jugador_caido, bala, puntuacion);
 	    rellenar_tablero(tablero, pos_jugadores, apunta, bala);
-	    //mover_jugadores(respuesta, tablero, pos_jugadores, apunta, bala, balas_disparadas);
-	    //mover_bala(bala, tablero, jugador_caido, puntuacion);
 	}while(respuesta != EXIT && jugador_caido[J1] != true && jugador_caido[J2] != true);
     }while(respuesta != EXIT);
 }
