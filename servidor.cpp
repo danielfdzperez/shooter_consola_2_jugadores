@@ -128,11 +128,9 @@ void inicializa_puntuaciones(int *puntuacion){
 void *calculo(void *args){
   struct TDatosCalculo *datos = (struct TDatosCalculo *) args;
 
-  printf("Estoy esperando %i\n", datos->datos_clientes->clientes_esperando);
   TDireccion direccion_anterior[2];
   while(1){
     while(datos->datos_clientes->clientes_esperando <= NJUGADORES);
-    //printf("Estoy esperando %i\n", datos->datos_clientes->clientes_esperando);
 
     //borra el arma
     for(int borrar=0; borrar<NJUGADORES; borrar++)
@@ -231,8 +229,6 @@ void *calculo(void *args){
 		break;
 	    }
 	    datos->datos_clientes->jugador[i].n_balas_disparadas ++;
-	    //if(datos->datos_clientes->jugador[i].n_balas_disparadas >= MAXBALAS)
-	    //  datos->datos_clientes->jugador[i].n_balas_disparadas = 0;
 
 	  }
 	  break;
@@ -262,23 +258,17 @@ void *calculo(void *args){
 	      [datos->datos_clientes->jugador[i].bala[n].posicion.columna] == 'H')
 	    datos->datos_clientes->jugador[i].bala[n].se_mueve = false;
 	  else
-	    if(datos->tablero[datos->datos_clientes->jugador[i].bala[n].posicion.fila]
-		[datos->datos_clientes->jugador[i].bala[n].posicion.columna] == '0' ||
-		datos->tablero[datos->datos_clientes->jugador[i].bala[n].posicion.fila]
-		[datos->datos_clientes->jugador[i].bala[n].posicion.columna] == '5'){
+	    if(datos->datos_clientes->jugador[i^1].posicion.fila == 
+		    datos->datos_clientes->jugador[i].bala[n].posicion.fila && 
+	            datos->datos_clientes->jugador[i^1].posicion.columna == 
+		    datos->datos_clientes->jugador[i].bala[n].posicion.columna){
 
 	      datos->datos_clientes->jugador[i].bala[n].se_mueve = false;
 	      inicializar_juego(datos->tablero, datos->datos_clientes->jugador);
-	      if(i == 0){
-		//datos->datos_clientes->jugador[1].abatido = true;
+	      if(i == 0)
 		datos->datos_clientes->jugador[0].puntuacion ++;
-	      }
-	      else{
-		//datos->datos_clientes->jugador[0].abatido = true;
-		printf("Entro %i\n", i);
-		datos->datos_clientes->jugador[1].puntuacion += 1;
-		printf("Entro %i\n", datos->datos_clientes->jugador[1].puntuacion);
-	      }
+	      else
+		datos->datos_clientes->jugador[1].puntuacion ++;
 	    }
 	    else
 	      datos->tablero[datos->datos_clientes->jugador[i].bala[n].posicion.fila]
@@ -286,9 +276,6 @@ void *calculo(void *args){
 	}
 
     }//Fin for jugadores de i
-
-    datos->tablero[datos->datos_clientes->jugador[0].posicion.fila][datos->datos_clientes->jugador[0].posicion.fila] = '0';
-    datos->tablero[datos->datos_clientes->jugador[1].posicion.fila][datos->datos_clientes->jugador[1].posicion.fila] = '5';
 
     direccion_anterior[0] = datos->datos_clientes->jugador[0].direccion;
     direccion_anterior[1] = datos->datos_clientes->jugador[1].direccion;
