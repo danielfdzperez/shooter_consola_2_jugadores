@@ -1,5 +1,0 @@
-CC=g++
-
-juego_online : comunicacion.cpp juego_online.cpp
-	$(CC) -o juego_online comunicacion.cpp juego_online.cpp -lpthread -lncurses
-
